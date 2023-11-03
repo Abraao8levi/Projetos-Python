@@ -10,8 +10,11 @@
 
 # para resolver isso, vamos usar o pyautogui, uma biblioteca de automação de comandos do mouse e do teclado
 
+import time
+
 import pandas as pd
-import pyautogui, time, pyperclip
+import pyautogui
+import pyperclip
 
 # entrando no sistema
 
@@ -48,7 +51,7 @@ pyautogui.click(534,777)
 
 # Calculando os indicadores
 
-tabela = pd.read_csv(r"C:\Users\Wellington\Downloads\Compras.csv", sep=";")
+tabela = pd.read_csv(r"C:\Users\Abraao\Downloads\Compras.csv", sep=";")
 
 print(tabela)
 total_gasto = tabela["ValorFinal"].sum()
