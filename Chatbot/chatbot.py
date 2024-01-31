@@ -12,11 +12,12 @@ def enviar_mensagem(mensagem):
             {"role": "user", "content": mensagem}
         ],
     )
-    return resposta["choices"][0]["message"]
+    return resposta["choices"][0]["message"]["content"]
 
 while True:
     texto = input("Escreva sua mensagem: ")
     if texto.lower() == "sair":
         break
     resposta = enviar_mensagem(texto)
-    print(resposta)
+    print("Assistente: ", resposta)
+    
