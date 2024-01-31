@@ -10,100 +10,69 @@
 
 # para resolver isso, vamos usar o pyautogui, uma biblioteca de automação de comandos do mouse e do teclado
 
-import time
 
 import pandas as pd
 import pyautogui
 import pyperclip
 
-# entrando no sistema
+def open_chrome():
+    pyautogui.hotkey("win")
+    pyautogui.write("Chrome")
+    pyautogui.hotkey("enter")
 
-time.sleep(2)
-pyautogui.hotkey("win")
-pyautogui.write("Chrome")
-time.sleep(2)
-pyautogui.hotkey("enter")
+def go_to_website(website):
+    pyautogui.write(website)
+    pyautogui.press("enter")
 
+def login(username, password):
+    pyautogui.click(796,380)
+    pyautogui.write(username)
+    pyautogui.hotkey("tab")
+    pyautogui.write(password)
+    pyautogui.hotkey("tab")
+    pyautogui.hotkey("enter")
 
-time.sleep(1)
-pyautogui.write("https://pages.hashtagtreinamentos.com/aula1-intensivao-sistema")
+def download_data():
+    pyautogui.click(492,358)
+    pyautogui.click(534,777)
 
-time.sleep(1)
-pyautogui.press("enter")
+def calculate_indicators(file_path):
+    tabela = pd.read_csv(file_path, sep=";")
+    total_gasto = tabela["ValorFinal"].sum()
+    quantidade = tabela["Quantidade"].sum()
+    preco_medio = total_gasto / quantidade
+    return total_gasto, quantidade, preco_medio
 
-# fazendo login
-time.sleep(1)
-pyautogui.click(796,380)
-pyautogui.write("usuário")
-pyautogui.hotkey("tab")
-pyautogui.write("senha123")
-pyautogui.hotkey("tab")
-pyautogui.hotkey("enter")
+def send_email(email, subject, message):
+    pyautogui.hotkey("ctrl", "t")
+    pyautogui.write("https://mail.google.com/mail/u/0/#inbox")
+    pyautogui.press("enter")
+    pyautogui.click(95, 204)
+    pyautogui.write(email)
+    pyautogui.hotkey("enter")
+    pyautogui.hotkey("tab")
+    pyperclip.copy(subject)
+    pyautogui.hotkey("ctrl", "v")
+    pyautogui.press("tab")
+    pyperclip.copy(message)
+    pyautogui.hotkey("ctrl", "v")
+    pyautogui.hotkey("ctrl", "enter")
 
+if __name__ == "__main__":
+    open_chrome()
+    go_to_website("https://pages.hashtagtreinamentos.com/aula1-intensivao-sistema")
+    login("usuário", "senha123")
+    download_data()
+    total_gasto, quantidade, preco_medio = calculate_indicators(r"C:\Users\Abraao\Downloads\Compras.csv")
+    texto = f"""
+    Prezados,
+    Segue o relatório de compras
 
-# baixando dados
-time.sleep(3)
-pyautogui.click(492,358)
+    Total Gasto: R${total_gasto:,.2f}
+    Quantidade de Produtos: {quantidade:,}
+    Preço Médio: R${preco_medio:,.2f}
 
-time.sleep(3)
-pyautogui.click(534,777)
-
-
-# Calculando os indicadores
-
-tabela = pd.read_csv(r"C:\Users\Abraao\Downloads\Compras.csv", sep=";")
-
-print(tabela)
-total_gasto = tabela["ValorFinal"].sum()
-quantidade = tabela["Quantidade"].sum()
-preco_medio = total_gasto / quantidade
-print(f"R$ {total_gasto:.2f}")
-print(f"R$ {quantidade:.2f}")
-print(f"R$ {preco_medio:.2f}")
-
-# entrar no email: https://mail.google.com/mail/u/0/#inbox
-time.sleep(3)
-pyautogui.hotkey("ctrl", "t")
-pyautogui.write("https://mail.google.com/mail/u/0/#inbox")
-pyautogui.press("enter")
-
-
-
-
-time.sleep(2)
-pyautogui.click(95, 204)
-
-time.sleep(2)
-pyautogui.write("pythonimpressionador@gmail.com")
-time.sleep(2)
-pyautogui.hotkey("enter")
-time.sleep(2)
-pyautogui.hotkey("tab")
-
-time.sleep(2)
-pyperclip.copy("Relatório de Vendas")
-pyautogui.hotkey("ctrl", "v")
-time.sleep(2)
-
-pyautogui.press("tab")
-
-
-texto = f"""
-Prezados,
-Segue o relatório de compras
-
-Total Gasto: R${total_gasto:,.2f}
-Quantidade de Produtos: {quantidade:,}
-Preço Médio: R${preco_medio:,.2f}
-
-Qualquer dúvida, é só falar.
-Att.,Abraão Levi
-"""
-
-pyperclip.copy(texto)
-
-pyautogui.hotkey("ctrl", "v")
-time.sleep(2)
-
-# enviar
-pyautogui.hotkey("ctrl", "enter")
+    Qualquer dúvida, é só falar.
+    Att.,Abraão Levi
+    """
+    send_email("pythonimpressionador@gmail.com", "Relatório de Vendas", texto)
